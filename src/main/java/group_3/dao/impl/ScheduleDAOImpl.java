@@ -1,8 +1,7 @@
 package group_3.dao.impl;
 
 import group_3.dao.ScheduleDAO;
-import group_3.model.Schedule_entry;
-import group_3.model.Ticket;
+import group_3.model.ScheduleEntry;
 import group_3.util.DatabaseConnection;
 
 import java.sql.*;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 
 public class ScheduleDAOImpl implements ScheduleDAO {
     @Override
-    public void create(Schedule_entry scheduleEntry) {
+    public void create(ScheduleEntry scheduleEntry) {
         String sql = "INSERT INTO schedule_entry (person_id, session_id, start_time, end_time) VALUES(?,?,?,?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -27,9 +26,9 @@ public class ScheduleDAOImpl implements ScheduleDAO {
     }
 
     @Override
-    public void update(Schedule_entry scheduleEntry) {
-        String sql = "UPDATE schedule_entry" +
-                "SET person_id = ?, session_id = ?, start_time = ?, end_time = ?" +
+    public void update(ScheduleEntry scheduleEntry) {
+        String sql = "UPDATE schedule_entry " +
+                "SET person_id = ?, session_id = ?, start_time = ?, end_time = ? " +
                 "WHERE session_id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -61,8 +60,8 @@ public class ScheduleDAOImpl implements ScheduleDAO {
 
     @Override
     public boolean deleteByUserAndSession(int userID, int sessionID) {
-        String sql = "DELETE FROM schedule_entry" +
-                "WHERE user_id = ? AND session_id = ?";
+        String sql = "DELETE FROM schedule_entry " +
+                "WHERE person_id = ? AND session_id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -76,13 +75,13 @@ public class ScheduleDAOImpl implements ScheduleDAO {
     }
 
     @Override
-    public ArrayList<Schedule_entry> findAllSchedule() {
+    public ArrayList<ScheduleEntry> findAllSchedule() {
         String sql = "SELECT * FROM schedule_entry";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            ArrayList<Schedule_entry> schedule = new ArrayList<>();
+            ArrayList<ScheduleEntry> schedule = new ArrayList<>();
             while (rs.next()) {
                 schedule.add(mapRowToScheduleEntry(rs));
             } return schedule;
@@ -93,7 +92,7 @@ public class ScheduleDAOImpl implements ScheduleDAO {
     }
 
     @Override
-    public Schedule_entry findById(int id) {
+    public ScheduleEntry findById(int id) {
         String sql = "SELECT * FROM schedule_entry WHERE schedule_id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -108,14 +107,14 @@ public class ScheduleDAOImpl implements ScheduleDAO {
     }
 
     @Override
-    public ArrayList<Schedule_entry> findAllScheduleByUserId(int userId) {
+    public ArrayList<ScheduleEntry> findAllScheduleByUserId(int userId) {
         String sql = "SELECT * FROM schedule_entry WHERE person_id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
-            ArrayList<Schedule_entry> schedule = new ArrayList<>();
+            ArrayList<ScheduleEntry> schedule = new ArrayList<>();
             while (rs.next()) {
                 schedule.add(mapRowToScheduleEntry(rs));
             } return schedule;
@@ -124,13 +123,13 @@ public class ScheduleDAOImpl implements ScheduleDAO {
         } return null;
     }
 
-    public Schedule_entry mapRowToScheduleEntry (ResultSet rs) throws SQLException {
+    public ScheduleEntry mapRowToScheduleEntry (ResultSet rs) throws SQLException {
         int id = rs.getInt("schedule_id");
         int personID = rs.getInt("person_id");
         int sessionID = rs.getInt("session_id");
         LocalDateTime startTime = rs.getTimestamp("start_time").toLocalDateTime();
         LocalDateTime endTime = rs.getTimestamp("end_time").toLocalDateTime();
 
-        return new Schedule_entry(id, personID, sessionID, startTime, endTime);
+        return new ScheduleEntry(id, personID, sessionID, startTime, endTime);
     }
 }

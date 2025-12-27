@@ -1,5 +1,7 @@
 package group_3.model;
-
+/**
+ * @author Group 3
+ */
 import java.time.LocalDateTime;
 
 public class Schedule_entry {

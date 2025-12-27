@@ -1,9 +1,9 @@
 package group_3.model;
 
-/*
+/**
  * Session within an event, scheduled at a specific date/time and venue.
  * Maintains ids of assigned presenters for lightweight linkage.
- * Author: <Tram Anh Tuan - s4075376>
+ * @author: Group 3
  */
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -4,7 +4,7 @@ package group_3.model;
  * Event composed of one or more sessions occurring at a location and date/time.
  * Stores session ids rather than full session objects to keep the model light.
  *
- * Author: <Tram Anh Tuan - s4075376>
+ * @author Group 3
  */
 
 

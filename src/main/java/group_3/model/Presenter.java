@@ -3,7 +3,7 @@ package group_3.model;
 import java.time.LocalDate;
 
 /**
- * @author Group21
+ * @author Group 3
  */
 public class Presenter extends Person {
 
@@ -22,5 +22,17 @@ public class Presenter extends Person {
 
     public String getPresenterRole() {
         return presenterRole;
+    }
+
+    public String getStatistics() {
+        return statistics;
+    }
+
+    public void setPresenterRole(String presenterRole) {
+        this.presenterRole = presenterRole;
+    }
+
+    public void setStatistics(String statistics) {
+        this.statistics = statistics;
     }
 }

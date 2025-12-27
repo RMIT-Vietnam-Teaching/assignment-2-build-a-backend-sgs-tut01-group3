@@ -3,7 +3,7 @@ package group_3.model;
 import java.time.LocalDate;
 
 /**
- * @author Group21
+ * @author Group 3
  */
 public class Attendee extends Person {
 
@@ -19,5 +19,9 @@ public class Attendee extends Person {
 
     public String getHistory() {
         return history;
+    }
+
+    public void setHistory(String history) {
+        this.history = history;
     }
 }

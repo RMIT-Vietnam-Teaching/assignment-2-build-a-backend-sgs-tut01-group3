@@ -78,9 +78,8 @@ CREATE TABLE
       event_id INT NOT NULL,
       title VARCHAR(255) NOT NULL,
       description TEXT NOT NULL,
-      scheduled_date DATE NOT NULL,
-      start_time TIME NOT NULL,
-      end_time TIME NOT NULL,
+      start_time TIMESTAMP NOT NULL,
+      end_time TIMESTAMP NOT NULL,
       venue VARCHAR(100),
       capacity INT,
       FOREIGN KEY (event_id) REFERENCES event (event_id) ON DELETE CASCADE
@@ -99,7 +98,7 @@ CREATE TABLE
       FOREIGN KEY (session_id) REFERENCES session (session_id) ON DELETE CASCADE
    );
 
--- SESSION PRESENTER TABLE
+-- SESSION PRESENTER TABLE --
 CREATE TABLE
    session_presenter (
       session_id INT NOT NULL,
@@ -125,6 +124,7 @@ CREATE TABLE
       FOREIGN KEY (session_id) REFERENCES session (session_id) ON DELETE CASCADE
    );
 
+-- SCHEDULE-ENTRY TABLE --
 CREATE TABLE
    schedule_entry (
       schedule_id SERIAL PRIMARY KEY,

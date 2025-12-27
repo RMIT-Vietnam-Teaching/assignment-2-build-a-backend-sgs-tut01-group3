@@ -2,7 +2,7 @@ package group_3.dao.impl;
 
 import group_3.model.*;
 import group_3.model.enums.Role;
-import group_3.DatabaseConnection;
+import group_3.util.DatabaseConnection;
 import group_3.dao.PersonDAO;
 
 import java.sql.*;

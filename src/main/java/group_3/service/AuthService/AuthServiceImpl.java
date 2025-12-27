@@ -1,4 +1,4 @@
-package group_3.service;
+package group_3.service.AuthService;
 
 import group_3.dao.PersonDAO;
 import group_3.dao.impl.PersonDAOImpl;
@@ -8,12 +8,13 @@ import group_3.util.PasswordUtil;
 import java.util.Optional;
 
 /**
- * @author Group21
+ * @author Group3
  */
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
 
     private final PersonDAO personDAO = new PersonDAOImpl();
 
+    @Override
     public Optional<Person> login(String username, String rawPassword) {
 
         Optional<Person> userOpt = personDAO.findByUsername(username);

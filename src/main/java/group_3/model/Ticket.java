@@ -1,5 +1,7 @@
 package group_3.model;
-
+/**
+ * @author Group 3
+ */
 import group_3.model.enums.*;
 
 public class Ticket {

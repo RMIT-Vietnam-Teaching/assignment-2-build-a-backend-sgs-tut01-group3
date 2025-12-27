@@ -1,5 +1,7 @@
 package group_3.util;
-
+/**
+ * @author Group 3
+ */
 import java.security.MessageDigest;
 
 public class PasswordUtil {

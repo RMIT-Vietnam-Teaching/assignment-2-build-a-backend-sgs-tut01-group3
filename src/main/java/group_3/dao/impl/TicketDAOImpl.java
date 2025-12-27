@@ -47,6 +47,8 @@ public class TicketDAOImpl implements TicketDAO {
                 ps.setString(7, ticket.getQRpath());
                 ps.setInt(8, ticket.getTicketID());
                 ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -56,7 +58,7 @@ public class TicketDAOImpl implements TicketDAO {
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, Integer.parseInt(id));
+            ps.setInt(1, id);
             return ps.executeUpdate() == 1;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,7 +86,7 @@ public class TicketDAOImpl implements TicketDAO {
         String sql = "SELECT * FROM ticket WHERE ticket_id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, Integer.parseInt(id));
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             return mapRowToTicket(rs);
         } catch (SQLException e) {
@@ -97,7 +99,7 @@ public class TicketDAOImpl implements TicketDAO {
         String sql = "SELECT * FROM ticket WHERE attendee_id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, Integer.parseInt(id));
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
             while (rs.next()) {
@@ -114,7 +116,7 @@ public class TicketDAOImpl implements TicketDAO {
         String sql = "SELECT * FROM ticket WHERE session_id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, Integer.parseInt(id));
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
             while (rs.next()) {
@@ -134,8 +136,8 @@ public class TicketDAOImpl implements TicketDAO {
         TicketType type = TicketType.valueOf(rs.getString("type"));
         double price = rs.getDouble("price");
         TicketStatus status = TicketStatus.valueOf(rs.getString("status"));
-        String qrpath = rs.getString("qrcode_data");
+        String qrpath = rs.getString("qr_code_data");
 
-        return new Ticket(id, attendeeID, eventID, sessionID, type, price, status, qrpath);
+        return new Ticket(id, eventID, sessionID, attendeeID, type, price, status, qrpath);
     }
 }
