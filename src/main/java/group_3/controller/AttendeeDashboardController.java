@@ -330,7 +330,7 @@ public class AttendeeDashboardController {
                 c.getValue().getStartTime() != null ? c.getValue().getStartTime().format(DATETIME_FORMATTER) : "N/A"));
         startTimeCol.setPrefWidth(120);
 
-        TableColumn<Session, String> endTimeCol = new TableColumn<>("Start Time");
+        TableColumn<Session, String> endTimeCol = new TableColumn<>("End Time");
         endTimeCol.setCellValueFactory(c -> new SimpleStringProperty(
                 c.getValue().getEndTime() != null ? c.getValue().getEndTime().format(DATETIME_FORMATTER) : "N/A"));
         endTimeCol.setPrefWidth(120);
