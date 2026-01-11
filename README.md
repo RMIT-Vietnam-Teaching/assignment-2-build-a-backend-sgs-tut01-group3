@@ -12,12 +12,3 @@ Team contribution
 | Dao Tien Dung    | s4088577   |        3.0         |
 | Lam Vi Tin       | s4116601   |        3.0         |
 | Tram Anh Tuan    | s4075376   |        3.0         |
-
-## Running the JAR outside the repo
-
-- Place the built JAR in any folder (e.g., C:/apps/event-system).
-- Run the app (no .env or env vars required):
-  - Windows PowerShell:
-    - java -jar assignment2-1.0-SNAPSHOT.jar
-
-The app loads SQL resources from the JAR and connects using built-in credentials embedded in the JDBC URL.

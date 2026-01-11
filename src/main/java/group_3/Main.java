@@ -26,7 +26,7 @@ public class Main extends Application {
             DatabaseConnection.setUpDatabase();
             System.out.println("Database initialized successfully");
         } catch (Exception e) {
-            System.err.println("❌ Failed to initialize database");
+            System.err.println("Failed to initialize database");
             e.printStackTrace();
         }
     }

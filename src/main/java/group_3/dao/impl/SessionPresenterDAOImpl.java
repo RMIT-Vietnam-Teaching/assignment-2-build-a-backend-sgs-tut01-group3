@@ -8,6 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * @author Group 3
+ *
+ *
+ */
 public class SessionPresenterDAOImpl implements SessionPresenterDAO {
 
     private Connection getConnection() throws SQLException   {
