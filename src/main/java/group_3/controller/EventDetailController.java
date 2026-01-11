@@ -18,6 +18,7 @@ import group_3.service.EventAdminService.EventAdminServiceImpl;
 import group_3.service.EventStatisticsService.EventStatisticsService;
 import group_3.service.EventStatisticsService.EventStatisticsServiceImpl;
 import group_3.util.DaoProvider;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -37,7 +38,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.application.Platform;
 
 /**
  * @author Group 3
@@ -453,53 +453,86 @@ public class EventDetailController {
     }
     
     private void handleViewFullStatistics() {
-        try {
-            int eventId = currentEvent.getEventId();
-            Optional<EventStatistics> statsOpt = statisticsService.getEventStatistics(eventId);
-            
-            if (statsOpt.isPresent()) {
-                EventStatistics stat = statsOpt.get();
-                String message = String.format(
-                    "Event: %s\nRevenue: $%.2f\nTickets Sold: %d\nChecked In: %d\nAttendance Rate: %.1f%%",
-                    stat.getEventName(),
-                    stat.getTotalRevenue(),
-                    stat.getTotalTicketsSold(),
-                    stat.getTotalCheckedIn(),
-                    stat.getAttendanceRate()
-                );
-                showInfo("Event Statistics", message);
+        // Run database query in background thread
+        Thread statsThread = new Thread(() -> {
+            try {
+                int eventId = currentEvent.getEventId();
+                Optional<EventStatistics> statsOpt = statisticsService.getEventStatistics(eventId);
+                
+                Platform.runLater(() -> {
+                    if (statsOpt.isPresent()) {
+                        EventStatistics stat = statsOpt.get();
+                        String message = String.format(
+                            "Event: %s\nRevenue: $%.2f\nTickets Sold: %d\nChecked In: %d\nAttendance Rate: %.1f%%",
+                            stat.getEventName(),
+                            stat.getTotalRevenue(),
+                            stat.getTotalTicketsSold(),
+                            stat.getTotalCheckedIn(),
+                            stat.getAttendanceRate()
+                        );
+                        showInfo("Event Statistics", message);
+                    } else {
+                        showInfo("Event Statistics", "No statistics available for this event.");
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    showError("Error", e.getMessage());
+                });
             }
-        } catch (Exception e) {
-            showError("Error", e.getMessage());
-        }
+        });
+        statsThread.setDaemon(true);
+        statsThread.start();
     }
 
     private void handleDownloadReport() {
-        try {
-            int eventId = currentEvent.getEventId();
-            String generatedPath = eventAdminService.exportEventReportPdf(eventId);
-
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save Event Report");
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
-            fileChooser.setInitialFileName("event_" + eventId + "_report.pdf");
-
-            File target = fileChooser.showSaveDialog(stage);
-            if (target != null) {
+        // First show file chooser (on UI thread)
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Event Report");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
+        fileChooser.setInitialFileName("event_" + currentEvent.getEventId() + "_report.pdf");
+        
+        File target = fileChooser.showSaveDialog(stage);
+        if (target == null) {
+            // User cancelled - do nothing
+            return;
+        }
+        
+        // Show loading indicator
+        Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
+        loadingAlert.setTitle("Generating Report");
+        loadingAlert.setHeaderText(null);
+        loadingAlert.setContentText("Generating PDF report... Please wait.");
+        loadingAlert.getButtonTypes().clear(); // Remove OK button during loading
+        loadingAlert.show();
+        
+        // Run PDF generation in background thread
+        Thread reportThread = new Thread(() -> {
+            try {
+                int eventId = currentEvent.getEventId();
+                String generatedPath = eventAdminService.exportEventReportPdf(eventId);
+                
                 Path destination = target.toPath();
                 Path parent = destination.getParent();
                 if (parent != null) {
                     Files.createDirectories(parent);
                 }
                 Files.copy(Paths.get(generatedPath), destination, StandardCopyOption.REPLACE_EXISTING);
-                showInfo("Report Saved", "Report saved to: " + destination.toAbsolutePath());
-            } else {
-                showInfo("Report Generated", "Report created at: " + Paths.get(generatedPath).toAbsolutePath());
+                
+                Platform.runLater(() -> {
+                    loadingAlert.close();
+                    showInfo("Report Saved", "Report saved to: " + destination.toAbsolutePath());
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    loadingAlert.close();
+                    showError("Report Error", e.getMessage());
+                });
             }
-        } catch (Exception e) {
-            showError("Report Error", e.getMessage());
-        }
+        });
+        reportThread.setDaemon(true);
+        reportThread.start();
     }
     
     private void showError(String title, String message) {

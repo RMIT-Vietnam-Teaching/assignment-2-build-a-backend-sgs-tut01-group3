@@ -12,8 +12,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import group_3.dao.SessionDAO;
+import group_3.dao.SessionMaterialDAO;
 import group_3.dao.TicketDAO;
 import group_3.dao.impl.PersonDAOImpl;
+import group_3.dao.impl.SessionMaterialDAOImpl;
 import group_3.model.Event;
 import group_3.model.Person;
 import group_3.model.Presenter;
@@ -94,6 +96,7 @@ public class PresenterDashboardController {
     private final UserService userService;
     private final SessionDAO sessionDAO;
     private final TicketDAO ticketDAO;
+    private final SessionMaterialDAO sessionMaterialDAO;
 
     private Scene scene;
     private Person currentUser;
@@ -140,6 +143,7 @@ public class PresenterDashboardController {
         this.userService = new UserServiceImpl(new PersonDAOImpl());
         this.sessionDAO = DaoProvider.getSessionDAO();
         this.ticketDAO = DaoProvider.getTicketDAO();
+        this.sessionMaterialDAO = new SessionMaterialDAOImpl();
         this.currentUser = AuthContext.getCurrentUser();
         
         // Load presenter data
@@ -233,6 +237,7 @@ public class PresenterDashboardController {
                     sessionList.setAll(data.sessions);
                     updateStatisticsView(stats);
                     loadProfileData();
+                    loadMaterialData(); // Load materials after sessions are loaded
                     loadingOverlay.setVisible(false);
                     
                 });
@@ -417,9 +422,16 @@ public class PresenterDashboardController {
     }
 
     private void loadMaterialData() {
-        // Materials would be loaded from a MaterialDAO
-        // For now, this is a placeholder
+        // Load materials from database for all sessions that belong to this presenter
         materialList.clear();
+        try {
+            for (Session session : sessionList) {
+                List<SessionMaterial> materials = sessionMaterialDAO.findBySessionId(session.getSessionId());
+                materialList.addAll(materials);
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading materials: " + e.getMessage());
+        }
     }
 
     private void handleUploadMaterial() {
@@ -516,9 +528,14 @@ public class PresenterDashboardController {
 
         Optional<SessionMaterial> result = dialog.showAndWait();
         result.ifPresent(material -> {
-            // Here you would save to database
-            materialList.add(material);
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Material uploaded successfully!");
+            try {
+                // Save to database
+                sessionMaterialDAO.create(material);
+                materialList.add(material);
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Material uploaded successfully!");
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to save material: " + e.getMessage());
+            }
         });
     }
 
@@ -530,8 +547,13 @@ public class PresenterDashboardController {
 
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            materialList.remove(material);
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Material deleted.");
+            try {
+                sessionMaterialDAO.delete(material.getMaterialId());
+                materialList.remove(material);
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Material deleted.");
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete material: " + e.getMessage());
+            }
         }
     }
 

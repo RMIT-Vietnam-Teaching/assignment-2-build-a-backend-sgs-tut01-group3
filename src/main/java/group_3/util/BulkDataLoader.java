@@ -671,7 +671,7 @@ public class BulkDataLoader {
 
     private static List<Event> loadEvents(Connection conn) throws SQLException {
         List<Event> list = new ArrayList<>();
-        String sql = "SELECT event_id, name, location, start_date, end_date, type, status, duration FROM event ORDER BY event_id";
+        String sql = "SELECT event_id, name, location, start_date, end_date, type, status, duration, event_image FROM event ORDER BY event_id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -683,6 +683,7 @@ public class BulkDataLoader {
                 java.time.LocalDateTime endDate = rs.getTimestamp("end_date") != null
                         ? rs.getTimestamp("end_date").toLocalDateTime() : null;
                 int duration = rs.getInt("duration");
+                String eventImage = rs.getString("event_image");
 
                 // Parse EventType - only accept valid enum values
                 EventType type = null;
@@ -705,7 +706,7 @@ public class BulkDataLoader {
                     }
                 }
 
-                Event e = new Event(eventId, name, type, startDate, endDate, location, duration, status);
+                Event e = new Event(eventId, name, type, startDate, endDate, location, duration, status, eventImage);
                 list.add(e);
             }
         }

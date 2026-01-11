@@ -1,13 +1,17 @@
 package group_3.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 import group_3.dao.TicketDAO;
-import group_3.model.*;
+import group_3.model.Ticket;
 import group_3.model.enums.TicketStatus;
 import group_3.model.enums.TicketType;
 import group_3.util.DatabaseConnection;
-
-import java.sql.*;
-import java.util.ArrayList;
 
 /**
  * @author Group 3
@@ -147,6 +151,23 @@ public class TicketDAOImpl implements TicketDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public ArrayList<Ticket> findByEventId(int eventId) {
+        String sql = "SELECT * FROM ticket WHERE event_id = ?";
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                tickets.add(mapRowToTicket(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tickets;
     }
 
     public Ticket mapRowToTicket(ResultSet rs) throws SQLException {

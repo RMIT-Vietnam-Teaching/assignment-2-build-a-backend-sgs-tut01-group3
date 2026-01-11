@@ -32,32 +32,32 @@ INSERT INTO presenter (person_id, presenter_role, statistics)
 SELECT id, 'Guest Speaker', '{"rating": 5.0}' FROM person WHERE role = 'PRESENTER';
 
 -- 4. EVENT DATA (20 Records)
-INSERT INTO event (name, type, start_date, end_date, location, duration, status) VALUES
-('TechConf 2026', 'CONFERENCE', '2026-03-01', '2026-03-03', 'San Francisco', 3, 'SCHEDULED'),
-('Design Summit', 'WORKSHOP', '2026-04-10', '2026-04-11', 'New York', 2, 'SCHEDULED'),
-('AI Expo', 'EXHIBITION', '2026-05-20', '2026-05-22', 'London', 3, 'SCHEDULED'),
-('Cyber Security Forum', 'CONFERENCE', '2026-06-15', '2026-06-16', 'Berlin', 2, 'SCHEDULED'),
-('HealthTech 2026', 'CONFERENCE', '2026-07-01', '2026-07-02', 'Tokyo', 2, 'CANCELLED'),
-('Green Energy Meet', 'WORKSHOP', '2026-08-05', '2026-08-05', 'Oslo', 1, 'CANCELLED'),
-('FinTech Days', 'CONCERT', '2026-09-10', '2026-09-12', 'Singapore', 3, 'CANCELLED'),
-('Mobile Dev Week', 'WORKSHOP', '2026-10-01', '2026-10-05', 'Austin', 5, 'SCHEDULED'),
-('Cloud Native Con', 'CONFERENCE', '2026-11-12', '2026-11-14', 'Seattle', 3, 'CANCELLED'),
-('Game Dev Gala', 'EXHIBITION', '2026-12-01', '2026-12-03', 'Los Angeles', 3, 'SCHEDULED'),
-('Open Source Summit', 'CONFERENCE', '2026-01-15', '2026-01-17', 'Paris', 3, 'COMPLETED'),
-('Blockchain Blast', 'WORKSHOP', '2026-02-10', '2026-02-10', 'Dubai', 1, 'COMPLETED'),
-('UX Masters', 'WORKSHOP', '2026-03-20', '2026-03-21', 'Toronto', 2, 'SCHEDULED'),
-('Data Science Day', 'CONFERENCE', '2026-04-05', '2026-04-05', 'Boston', 1, 'SCHEDULED'),
-('E-commerce Expo', 'EXHIBITION', '2026-05-12', '2026-05-13', 'Madrid', 2, 'SCHEDULED'),
-('IoT World', 'CONFERENCE', '2026-06-25', '2026-06-27', 'Seoul', 3, 'SCHEDULED'),
-('Robotics Rally', 'WORKSHOP', '2026-07-15', '2026-07-17', 'Pittsburgh', 3, 'SCHEDULED'),
-('Future of Food', 'EXHIBITION', '2026-08-20', '2026-08-21', 'Amsterdam', 2, 'SCHEDULED'),
-('Space Explorers', 'CONFERENCE', '2026-09-05', '2026-09-05', 'Houston', 1, 'SCHEDULED'),
-('LegalTech Meetup', 'CONFERENCE', '2026-10-10', '2026-10-11', 'Sydney', 2, 'SCHEDULED'),
-('Tech Innovators', 'CONFERENCE', '2026-11-20', '2026-11-22', 'San Jose', 3, 'ONGOING'),
-('AR/VR Expo', 'EXHIBITION', '2026-12-15', '2026-12-16', 'Chicago', 2, 'ONGOING'),
-('Social Media Summit', 'WORKSHOP', '2027-01-10', '2027-01-11', 'Miami', 2, 'ONGOING'),
-('EdTech Forum', 'CONFERENCE', '2027-02-05', '2027-02-07', 'Dublin', 3, 'ONGOING'),
-('BioTech Symposium', 'CONFERENCE', '2027-03-12', '2027-03-14', 'Geneva', 3, 'ONGOING');
+INSERT INTO event (name, type, start_date, end_date, location, duration, status, event_image) VALUES
+('TechConf 2026', 'CONFERENCE', '2026-03-01', '2026-03-03', 'San Francisco', 3, 'SCHEDULED', 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800'),
+('Design Summit', 'WORKSHOP', '2026-04-10', '2026-04-11', 'New York', 2, 'SCHEDULED', 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800'),
+('AI Expo', 'EXHIBITION', '2026-05-20', '2026-05-22', 'London', 3, 'SCHEDULED', 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800'),
+('Cyber Security Forum', 'CONFERENCE', '2026-06-15', '2026-06-16', 'Berlin', 2, 'SCHEDULED', 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800'),
+('HealthTech 2026', 'CONFERENCE', '2026-07-01', '2026-07-02', 'Tokyo', 2, 'CANCELLED', 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800'),
+('Green Energy Meet', 'WORKSHOP', '2026-08-05', '2026-08-05', 'Oslo', 1, 'CANCELLED', 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800'),
+('FinTech Days', 'CONCERT', '2026-09-10', '2026-09-12', 'Singapore', 3, 'CANCELLED', 'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800'),
+('Mobile Dev Week', 'WORKSHOP', '2026-10-01', '2026-10-05', 'Austin', 5, 'SCHEDULED', 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800'),
+('Cloud Native Con', 'CONFERENCE', '2026-11-12', '2026-11-14', 'Seattle', 3, 'CANCELLED', 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800'),
+('Game Dev Gala', 'EXHIBITION', '2026-12-01', '2026-12-03', 'Los Angeles', 3, 'SCHEDULED', 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800'),
+('Open Source Summit', 'CONFERENCE', '2026-01-15', '2026-01-17', 'Paris', 3, 'COMPLETED', 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800'),
+('Blockchain Blast', 'WORKSHOP', '2026-02-10', '2026-02-10', 'Dubai', 1, 'COMPLETED', 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800'),
+('UX Masters', 'WORKSHOP', '2026-03-20', '2026-03-21', 'Toronto', 2, 'SCHEDULED', 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800'),
+('Data Science Day', 'CONFERENCE', '2026-04-05', '2026-04-05', 'Boston', 1, 'SCHEDULED', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800'),
+('E-commerce Expo', 'EXHIBITION', '2026-05-12', '2026-05-13', 'Madrid', 2, 'SCHEDULED', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800'),
+('IoT World', 'CONFERENCE', '2026-06-25', '2026-06-27', 'Seoul', 3, 'SCHEDULED', 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=800'),
+('Robotics Rally', 'WORKSHOP', '2026-07-15', '2026-07-17', 'Pittsburgh', 3, 'SCHEDULED', 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800'),
+('Future of Food', 'EXHIBITION', '2026-08-20', '2026-08-21', 'Amsterdam', 2, 'SCHEDULED', 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800'),
+('Space Explorers', 'CONFERENCE', '2026-09-05', '2026-09-05', 'Houston', 1, 'SCHEDULED', 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800'),
+('LegalTech Meetup', 'CONFERENCE', '2026-10-10', '2026-10-11', 'Sydney', 2, 'SCHEDULED', 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800'),
+('Tech Innovators', 'CONFERENCE', '2026-11-20', '2026-11-22', 'San Jose', 3, 'ONGOING', 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800'),
+('AR/VR Expo', 'EXHIBITION', '2026-12-15', '2026-12-16', 'Chicago', 2, 'ONGOING', 'https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?w=800'),
+('Social Media Summit', 'WORKSHOP', '2027-01-10', '2027-01-11', 'Miami', 2, 'ONGOING', 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800'),
+('EdTech Forum', 'CONFERENCE', '2027-02-05', '2027-02-07', 'Dublin', 3, 'ONGOING', 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800'),
+('BioTech Symposium', 'CONFERENCE', '2027-03-12', '2027-03-14', 'Geneva', 3, 'ONGOING', 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800');
 
 -- 5. SESSION DATA
 INSERT INTO session (

@@ -48,9 +48,28 @@ public class EventStatisticsServiceImpl implements EventStatisticsService {
         }
         
         Event event = eventOpt.get();
-        double revenue = calculateEventRevenue(eventId);
-        int ticketsSold = getTotalTicketsSold(eventId);
-        int checkedIn = getTotalCheckedIn(eventId);
+        
+        // Optimized: Fetch tickets for this event once, then calculate all stats in one pass
+        ArrayList<Ticket> eventTickets = ticketDAO.findByEventId(eventId);
+        if (eventTickets == null) {
+            eventTickets = new ArrayList<>();
+        }
+        
+        // Calculate all stats in a single pass through the tickets
+        double revenue = 0.0;
+        int ticketsSold = 0;
+        int checkedIn = 0;
+        
+        for (Ticket ticket : eventTickets) {
+            TicketStatus status = ticket.getStatus();
+            if (status == TicketStatus.ACTIVE || status == TicketStatus.USED) {
+                ticketsSold++;
+                revenue += ticket.getPrice();
+                if (status == TicketStatus.USED) {
+                    checkedIn++;
+                }
+            }
+        }
         
         EventStatistics stats = new EventStatistics(
             eventId,
@@ -65,13 +84,12 @@ public class EventStatisticsServiceImpl implements EventStatisticsService {
     
     @Override
     public double calculateEventRevenue(int eventId) {
-        ArrayList<Ticket> tickets = ticketDAO.findAll();
+        ArrayList<Ticket> tickets = ticketDAO.findByEventId(eventId);
         if (tickets == null) {
             return 0.0;
         }
         
         return tickets.stream()
-            .filter(ticket -> ticket.getEventID() == eventId)
             .filter(ticket -> ticket.getStatus() == TicketStatus.ACTIVE || 
                             ticket.getStatus() == TicketStatus.USED)
             .mapToDouble(Ticket::getPrice)
@@ -197,13 +215,12 @@ public class EventStatisticsServiceImpl implements EventStatisticsService {
     
     @Override
     public int getTotalTicketsSold(int eventId) {
-        ArrayList<Ticket> tickets = ticketDAO.findAll();
+        ArrayList<Ticket> tickets = ticketDAO.findByEventId(eventId);
         if (tickets == null) {
             return 0;
         }
         
         return (int) tickets.stream()
-            .filter(ticket -> ticket.getEventID() == eventId)
             .filter(ticket -> ticket.getStatus() == TicketStatus.ACTIVE || 
                             ticket.getStatus() == TicketStatus.USED)
             .count();
@@ -211,13 +228,12 @@ public class EventStatisticsServiceImpl implements EventStatisticsService {
     
     @Override
     public int getTotalCheckedIn(int eventId) {
-        ArrayList<Ticket> tickets = ticketDAO.findAll();
+        ArrayList<Ticket> tickets = ticketDAO.findByEventId(eventId);
         if (tickets == null) {
             return 0;
         }
         
         return (int) tickets.stream()
-            .filter(ticket -> ticket.getEventID() == eventId)
             .filter(ticket -> ticket.getStatus() == TicketStatus.USED)
             .count();
     }

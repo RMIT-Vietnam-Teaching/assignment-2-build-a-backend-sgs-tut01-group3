@@ -26,4 +26,13 @@ public interface TicketDAO {
     ArrayList<Ticket> findTicketByAttendeeId(int id);
 
     ArrayList<Ticket> findTicketBySessionId(int id);
+    
+    /**
+     * Find all tickets for a specific event.
+     * More efficient than findAll() when you only need tickets for one event.
+     * 
+     * @param eventId the event ID
+     * @return list of tickets for the event
+     */
+    ArrayList<Ticket> findByEventId(int eventId);
 }

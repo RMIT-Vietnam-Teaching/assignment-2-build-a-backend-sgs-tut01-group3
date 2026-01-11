@@ -1,12 +1,19 @@
 package group_3.service.EventAdminService;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -714,14 +721,13 @@ public class EventAdminServiceImpl implements EventAdminService {
             return new ArrayList<>();
         }
         
-        List<Ticket> allTickets = ticketDAO.findAll();
-        if (allTickets == null) {
+        // Use optimized query to fetch only tickets for this event
+        List<Ticket> eventTickets = ticketDAO.findByEventId(eventId);
+        if (eventTickets == null) {
             return new ArrayList<>();
         }
         
-        return allTickets.stream()
-                .filter(t -> t.getEventID() == eventId)
-                .collect(Collectors.toList());
+        return eventTickets;
     }
 
    
@@ -882,7 +888,7 @@ public class EventAdminServiceImpl implements EventAdminService {
                     "{\"eventId\": %d, \"reportType\": \"%s\", \"filePath\": \"%s\"}",
                     eventId,
                     reportType.toUpperCase(),
-                    filePath
+                    filePath.replace("\\", "/")
             );
 
             historyService.logAction(
@@ -1018,7 +1024,7 @@ public class EventAdminServiceImpl implements EventAdminService {
             String detail = String.format(
                     "{\"eventId\": %d, \"reportType\": \"PDF\", \"filePath\": \"%s\"}",
                     eventId,
-                    pdfPath
+                    pdfPath.toString().replace("\\", "/")
             );
 
             historyService.logAction(

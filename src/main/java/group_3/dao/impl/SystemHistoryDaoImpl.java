@@ -39,7 +39,21 @@ public class SystemHistoryDaoImpl implements SystemHistoryDAO {
             }
 
             ps.setString(2, history.getOperationType());
-            ps.setString(3, history.getDetails());
+            
+            // Wrap details in a JSON object if it's not already valid JSON
+            String details = history.getDetails();
+            if (details != null && !details.trim().startsWith("{") && !details.trim().startsWith("[")) {
+                // Properly escape for JSON and convert backslashes to forward slashes
+                String escaped = details
+                    .replace("\\", "/")     // Convert backslashes to forward slashes
+                    .replace("\"", "\\\"")  // Escape quotes
+                    .replace("\n", "\\n")   // Escape newlines
+                    .replace("\r", "\\r")   // Escape carriage returns
+                    .replace("\t", "\\t");  // Escape tabs
+                details = "{\"message\": \"" + escaped + "\"}";
+            }
+            // If it's already JSON, pass it through as-is (caller should ensure proper escaping)
+            ps.setString(3, details);
 
             ps.executeUpdate();
 
