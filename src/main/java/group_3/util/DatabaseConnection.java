@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import io.github.cdimascio.dotenv.Dotenv;
 
 /**
  * @author Group 3
@@ -23,28 +22,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class DatabaseConnection {
 
-    private static final Dotenv dotenv = Dotenv.configure()
-            .ignoreIfMissing()
-            .load();
-
-    private static final String URL  = getEnvOrDefault("DB_URL", "jdbc:postgresql://localhost:5432/event_management");
-    private static final String USER = getEnvOrDefault("DB_USER", "postgres");
-    private static final String PASS = getEnvOrDefault("DB_PASS", "");
-
-    private static String getEnvOrDefault(String key, String defaultValue) {
-        // First try dotenv
-        String value = dotenv.get(key);
-        if (value != null && !value.isEmpty()) {
-            return value;
-        }
-        // Then try system environment
-        value = System.getenv(key);
-        if (value != null && !value.isEmpty()) {
-            return value;
-        }
-        // Fall back to default
-        return defaultValue;
-    }
+    // Hardcoded defaults: Supabase-style URL with embedded credentials
+    private static final String URL  = "jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?user=postgres.rhevgrivrjisjwwzmfur&password=yj5CF-iT7.CZ!di";
 
     /**
      * Get a new database connection. Each call returns a fresh connection.
@@ -57,12 +36,12 @@ public class DatabaseConnection {
             throw new SQLException("PostgreSQL JDBC Driver not found", e);
         }
         
-        return DriverManager.getConnection(URL, USER, PASS);
+        return DriverManager.getConnection(URL);
     }
 
     private static boolean isDatabaseFullyInitialized() {
         String[] requiredTables = {"person", "attendee", "event", "session", "ticket", "audit_log"};
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
+        try (Connection conn = DriverManager.getConnection(URL)) {
             for (String table : requiredTables) {
                 String checkQuery = "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = '" + table + "')";
                 try (Statement stmt = conn.createStatement();
@@ -128,7 +107,7 @@ public class DatabaseConnection {
     }
 
     public static void setupSchema() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
+        try (Connection conn = DriverManager.getConnection(URL)) {
             String[] dropStatements = {
                 "DROP TABLE IF EXISTS audit_log CASCADE",
                 "DROP TABLE IF EXISTS schedule_entry CASCADE",
@@ -158,7 +137,7 @@ public class DatabaseConnection {
     }
 
     public static void loadInitialData() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
+        try (Connection conn = DriverManager.getConnection(URL)) {
             executeSQLScript(conn, "sql/initial_data.sql");
             System.out.println("Initial data loaded");
         } catch (SQLException e) {
